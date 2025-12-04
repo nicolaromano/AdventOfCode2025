@@ -62,23 +62,36 @@ print(f"The password for part 1 is {password}")
 
 # Part 2 - The password is the number of times the dial *crosses* 0, even if it doesn't land on it
 
-def get_pwd_2(input_data, starting_position, max_steps=99):
+def get_pwd_2(input_data, starting_position, max_steps=99, debug=False):
     password = 0    
-
+    
     for i in input_data:
         direction, steps = i
+
+        if debug:
+            print(f"Starting Position: {starting_position}, Current Password: {password}")
         
         if direction == "L":
-            if (steps >= starting_position): # We're crossing 0 at least once
-                ncrossing = (steps - starting_position) // (max_steps + 1) + 1
-                password += ncrossing
-        else: # direction == "R"
-            if (steps > (max_steps - starting_position)):
-                ncrossing = (steps - (max_steps - starting_position)) // (max_steps + 1) + 1
-                password += ncrossing
+            # We cross 0 after starting_position steps, then every (max_steps + 1) steps after that
+            first_crossing = starting_position if starting_position != 0 else max_steps + 1
+                        
+            if steps >= first_crossing:
+                ncrossings = 1 + (steps - first_crossing) // (max_steps + 1)
+                password += ncrossings
+                
+        if direction == "R":
+            # We cross 0 after (max_steps + 1 - starting_position) steps, then every (max_steps + 1) steps after that
+            first_crossing = (max_steps + 1 - starting_position)
             
-        starting_position = rotate_dial(starting_position, direction, steps)
-    
+            if steps >= first_crossing:
+                ncrossings = 1 + (steps - first_crossing) // (max_steps + 1)
+                password += ncrossings
+                
+        starting_position = rotate_dial(starting_position, direction, steps, max_steps)
+                
+        if debug:
+            print(f"After moving {direction} {steps}, new position: {starting_position}, Current Password: {password}\n")
+        
     return password
 
 # This should give 2 crossings
@@ -103,6 +116,7 @@ test_data_3 = [("L", 10), # 50 -> 40
 # This should give 4 crossings
 test_data_4 = [("R", 355)] # 50 -> 5 (crosses 0 four times)
 
+# From the example in the prompt, should give 6 crossings
 test_data_5 = [("L", 68),
                ("L", 30),
                 ("R", 48),
@@ -114,11 +128,16 @@ test_data_5 = [("L", 68),
                 ("R", 14),
                 ("L", 82)]
 
+test_data_6 = [("L", 49), # 0 (lands on 0)
+               ("R", 10)  # 10
+            ]
+
 assert(get_pwd_2(test_data, 50) == 2)
 assert(get_pwd_2(test_data_2, 50) == 4)
 assert(get_pwd_2(test_data_3, 50) == 0)
 assert(get_pwd_2(test_data_4, 50) == 4)
 assert(get_pwd_2(test_data_5, 50) == 6)
+get_pwd_2(test_data_6, 0, debug=True) 
 
 password2 = get_pwd_2(input_data, 50)
 
