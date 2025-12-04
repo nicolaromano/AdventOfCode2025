@@ -60,3 +60,66 @@ password = get_pwd_1(input_data, 50)
 
 print(f"The password for part 1 is {password}")
 
+# Part 2 - The password is the number of times the dial *crosses* 0, even if it doesn't land on it
+
+def get_pwd_2(input_data, starting_position, max_steps=99):
+    password = 0    
+
+    for i in input_data:
+        direction, steps = i
+        
+        if direction == "L":
+            if (steps >= starting_position): # We're crossing 0 at least once
+                ncrossing = (steps - starting_position) // (max_steps + 1) + 1
+                password += ncrossing
+        else: # direction == "R"
+            if (steps > (max_steps - starting_position)):
+                ncrossing = (steps - (max_steps - starting_position)) // (max_steps + 1) + 1
+                password += ncrossing
+            
+        starting_position = rotate_dial(starting_position, direction, steps)
+    
+    return password
+
+# This should give 2 crossings
+test_data = [("L", 30), # 50 -> 20
+             ("R", 10), # 20 -> 30
+             ("L", 31), # 30 -> 99 (crosses 0) 
+             ("R", 2)   # 99 -> 1 (crosses 0)
+            ]
+# This should give 4 crossings
+test_data_2 = [("R", 60), # 50 -> 10 (crosses 0)
+                ("L", 20), # 10 -> 90 (crosses 0)
+                ("R", 15), # 90 -> 5 (crosses 0)
+                ("L", 5)   # 5 -> 0 (lands on 0)
+               ]
+
+# This should give no crossings
+test_data_3 = [("L", 10), # 50 -> 40
+                ("R", 20), # 40 -> 60
+                ("L", 15), # 60 -> 45
+                ("R", 5)   # 45 -> 50
+               ]
+# This should give 4 crossings
+test_data_4 = [("R", 355)] # 50 -> 5 (crosses 0 four times)
+
+test_data_5 = [("L", 68),
+               ("L", 30),
+                ("R", 48),
+                ("L", 5),
+                ("R", 60),
+                ("L", 55),
+                ("L", 1),
+                ("L", 99),
+                ("R", 14),
+                ("L", 82)]
+
+assert(get_pwd_2(test_data, 50) == 2)
+assert(get_pwd_2(test_data_2, 50) == 4)
+assert(get_pwd_2(test_data_3, 50) == 0)
+assert(get_pwd_2(test_data_4, 50) == 4)
+assert(get_pwd_2(test_data_5, 50) == 6)
+
+password2 = get_pwd_2(input_data, 50)
+
+print(f"The password for part 2 is {password2}")
