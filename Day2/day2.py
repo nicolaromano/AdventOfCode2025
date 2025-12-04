@@ -27,4 +27,23 @@ for r in ranges:
                 
 print(f"The sum of all invalid IDs is {sum}")
 
-# Part 2
+# Part 2 - Invalid IDs made by repeating the same digits a number of times
+
+def check_invalid_id_2(n:int) -> bool:
+    n_str = str(n)
+    length = len(n_str)
+    for size in range(1, length//2 + 1):
+        if length % size == 0: # size must divide length
+            times = length // size
+            if n_str[:size] * times == n_str:
+                return True
+    return False
+
+sum = 0
+
+for r in ranges:
+    for n in range(r[0], r[1]+1):
+        if check_invalid_id_2(n):
+            sum += n
+                
+print(f"The sum of all invalid IDs (pt 2) is {sum}")
