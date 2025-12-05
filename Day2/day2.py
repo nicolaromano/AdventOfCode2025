@@ -12,6 +12,15 @@ ranges = [(int(r[0]), int(r[1])) for r in (x.split('-') for x in input_data)]
 # Part 1 - Sum of all invalid IDs made by repeating the same digits twice
 
 def check_invalid_id(n:int) -> bool:
+    '''
+    Check if the number n is made by repeating the same digits twice
+    
+    Parameters:
+    n (int): The number to check
+    
+    Returns:
+    bool: is n invalid ID?
+    '''
     n_str = str(n)
     if len(n_str) % 2 != 0: # odd length can't be invalid
         return False
