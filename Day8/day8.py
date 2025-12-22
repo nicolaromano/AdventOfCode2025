@@ -97,8 +97,8 @@ assert (len(circuits_test[0]) * len(circuits_test[1])
         * len(circuits_test[2]) == 40)
 
 # Part 1
-# circuits = connect_nodes(input_data, max_connections=1000)
-# print(len(circuits[0]) * len(circuits[1]) * len(circuits[2]))
+circuits = connect_nodes(input_data, max_connections=1000)
+print(len(circuits[0]) * len(circuits[1]) * len(circuits[2]))
 
 # Part 2 - merge until there is only 1 circuit left
 node1, node2, distance = connect_nodes(input_data, max_connections=-1)
