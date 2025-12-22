@@ -37,7 +37,7 @@ def euclidean_distance(point1, point2):
     return np.sqrt(np.sum((point1 - point2) ** 2))
 
 
-def get_distances(data, euclidean_distance):
+def get_distances(data):
     distances = []
 
     for i in range(len(data)):
@@ -58,7 +58,7 @@ def create_circuits(data):
 
 
 def connect_nodes(data, max_connections=-1):
-    distances = get_distances(data, euclidean_distance)
+    distances = get_distances(data)
     circuits, node_to_circuit = create_circuits(data)
 
     n_connections = 0
